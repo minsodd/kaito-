@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaito 나만의 티어</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* 기본 스타일 */
+    body {
+      margin: 0;
+      background-color: #0d0d0d;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin: 30px 0;
+      font-size: 2.5rem;
+      color: #ff6f61;
+      text-shadow: 1px 1px 5px #000;
+    }
+
+    .container {
+      display: flex;
+      gap: 25px;
+      width: 95%;
+      max-width: 1500px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* 티어 영역 */
+    .tier-container {
+      flex: 2 1 550px;
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      min-width: 320px;
+    }
+
+    .tier-row {
+      display: flex;
+      min-height: 110px;
+      border-bottom: 1px solid #333;
+      transition: background 0.3s ease;
+    }
+
+    .tier-row:last-child { border-bottom: none; }
+
+    .tier-label {
+      width: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .tier-dropzone {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      min-height: 110px;
+      overflow-y: auto;
+      max-height: 80vh;
+      border-radius: 0 15px 15px 0;
+    }
+
+    .tier-dropzone.drag-over {
+      background-color: rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    /* 아이콘 풀 */
+    #icons-pool {
+      flex: 1 1 280px;
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      padding: 20px 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      overflow-y: auto;
+      max-height: 80vh;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      min-width: 220px;
+      scroll-behavior: smooth;
+    }
+
+    #icons-pool h2 {
+      width: 100%;
+      color: #bbb;
+      font-size: 1.3rem;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* 아이콘 스타일 */
+    .icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: grab;
+      background-color: #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .icon:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 18px rgba(255,111,97,0.6);
+    }
+
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .icon.dragging {
+      opacity: 0.7;
+      transform: scale(1.15);
+      box-shadow: 0 8px 20px rgba(255,111,97,0.7);
+    }
+
+    /* 반응형 */
+    @media (max-width:900px){
+      .container { flex-direction: column; align-items: center; }
+      #icons-pool { max-height: 50vh; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>kaito 나만의 티어</h1>
+
+<div class="container">
+  <div class="tier-container">
+    <div class="tier-row"><div class="tier-label" style="background-color:#ff7f7f;">S</div><div class="tier-dropzone" data-tier="s"></div></div>
+    <div class="tier-row"><div class="tier-label" style="background-color:#ffbf7f;">A</div><div class="tier-dropzone" data-tier="a"></div></div>
+    <div class="tier-row"><div class="tier-label" style="background-color:#ffff7f;">B</div><div class="tier-dropzone" data-tier="b"></div></div>
+    <div class="tier-row"><div class="tier-label" style="background-color:#7fff7f;">C</div><div class="tier-dropzone" data-tier="c"></div></div>
+    <div class="tier-row"><div class="tier-label" style="background-color:#7fbfff;">D</div><div class="tier-dropzone" data-tier="d"></div></div>
+  </div>
+
+  <div id="icons-pool" class="tier-dropzone" data-tier="pool">
+    <h2>아이콘 목록</h2>
+    <script>
+      const iconPaths = [
+        "images/w=48&q=90 (1).webp","images/w=48&q=90 (2).webp","images/w=48&q=90 (3).webp",
+        "images/w=48&q=90 (4).webp","images/w=48&q=90 (5).webp","images/w=48&q=90 (6).webp",
+        "images/w=48&q=90 (7).webp","images/w=48&q=90 (8).webp","images/w=48&q=90 (9).webp",
+        "images/w=48&q=90 (10).webp","images/w=48&q=90 (11).webp","images/w=48&q=90.webp",
+        "images/w=64&q=90 (1).webp","images/w=64&q=90 (2).webp","images/w=64&q=90 (3).webp",
+        "images/w=64&q=90 (4).webp","images/w=64&q=90 (5).webp","images/w=64&q=90 (6).webp",
+        "images/w=64&q=90 (7).webp","images/w=64&q=90 (8).webp","images/w=64&q=90 (9).webp",
+        "images/w=64&q=90 (10).webp","images/w=64&q=90 (11).webp","images/w=64&q=90 (12).webp",
+        "images/w=64&q=90 (13).webp","images/w=64&q=90 (14).webp","images/w=64&q=90 (15).webp",
+        "images/w=64&q=90 (16).webp","images/w=64&q=90 (17).webp","images/w=64&q=90 (18).webp",
+        "images/w=64&q=90 (19).webp","images/w=64&q=90 (20).webp","images/w=64&q=90 (21).webp",
+        "images/w=64&q=90 (22).webp","images/w=64&q=90 (23).webp","images/w=64&q=90 (24).webp",
+        "images/w=64&q=90 (25).webp","images/w=64&q=90 (26).webp","images/w=64&q=90 (27).webp",
+        "images/w=64&q=90 (28).webp","images/w=64&q=90 (29).webp","images/w=64&q=90 (30).webp",
+        "images/w=64&q=90 (31).webp","images/w=64&q=90 (32).webp","images/w=64&q=90 (33).webp",
+        "images/w=64&q=90 (34).webp","images/w=64&q=90 (35).webp","images/w=64&q=90 (36).webp",
+        "images/w=64&q=90 (37).webp","images/w=64&q=90 (38).webp","images/w=64&q=90 (39).webp",
+        "images/w=64&q=90 (40).webp","images/w=64&q=90 (41).webp","images/w=64&q=90 (42).webp",
+        "images/w=64&q=90 (43).webp","images/w=64&q=90 (44).webp","images/w=64&q=90 (45).webp",
+        "images/w=64&q=90 (46).webp","images/w=64&q=90 (47).webp","images/w=64&q=90 (48).webp",
+        "images/w=64&q=90 (49).webp","images/w=64&q=90 (50).webp","images/w=64&q=90 (51).webp",
+        "images/w=64&q=90 (52).webp","images/w=64&q=90 (53).webp","images/w=64&q=90 (54).webp",
+        "images/w=64&q=90 (55).webp","images/w=64&q=90 (56).webp","images/w=64&q=90 (57).webp",
+        "images/w=64&q=90 (58).webp","images/w=64&q=90 (59).webp","images/w=64&q=90 (60).webp",
+        "images/w=64&q=90 (61).webp","images/w=64&q=90 (62).webp","images/w=64&q=90 (63).webp",
+        "images/w=64&q=90 (64).webp","images/w=64&q=90 (65).webp","images/w=64&q=90 (66).webp",
+        "images/w=64&q=90 (67).webp","images/w=64&q=90 (68).webp","images/w=64&q=90 (69).webp",
+        "images/w=64&q=90 (70).webp","images/w=64&q=90 (71).webp","images/w=64&q=90 (72).webp",
+        "images/w=64&q=90 (73).webp","images/w=64&q=90 (74).webp","images/w=64&q=90 (75).webp",
+        "images/w=64&q=90 (76).webp","images/w=64&q=90 (77).webp","images/w=64&q=90 (78).webp",
+        "images/w=64&q=90 (79).webp","images/w=64&q=90 (80).webp","images/w=64&q=90 (81).webp",
+        "images/w=64&q=90 (82).webp","images/w=64&q=90 (83).webp","images/w=64&q=90 (84).webp",
+        "images/w=64&q=90 (85).webp","images/w=64&q=90 (86).webp","images/w=64&q=90 (87).webp",
+        "images/w=64&q=90 (88).webp","images/w=64&q=90 (89).webp","images/w=64&q=90 (90).webp",
+        "images/w=64&q=90 (91).webp","images/w=64&q=90 (92).webp","images/w=64&q=90 (93).webp",
+        "images/w=64&q=90 (94).webp","images/다운로드 (33).jpeg","images/다운로드 (33).png","images/루멘.jpeg"
+      ];
+
+      iconPaths.forEach((src,index)=>{
+        const div=document.createElement('div');
+        div.className='icon';
+        div.id='icon-'+(index+1);
+        div.draggable=true;
+        const img=document.createElement('img');
+        img.src=src;
+        img.alt='아이콘 '+(index+1);
+        div.appendChild(img);
+        document.getElementById('icons-pool').appendChild(div);
+      });
+    </script>
+</div>
+
+<script>
+  // 드래그 & 드롭 기능
+  const zones = document.querySelectorAll('.tier-dropzone');
+
+  document.addEventListener('dragstart', e=>{
+    if(e.target.classList.contains('icon')) e.target.classList.add('dragging');
+  });
+
+  document.addEventListener('dragend', e=>{
+    if(e.target.classList.contains('icon')) {
+      e.target.classList.remove('dragging');
+      saveState();
+    }
+  });
+
+  zones.forEach(zone=>{
+    zone.addEventListener('dragover', e=>{
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', ()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e=>{
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const dragging = document.querySelector('.dragging');
+      if(dragging) zone.appendChild(dragging);
+      saveState();
+    });
+  });
+
+  function saveState(){
+    const state={};
+    zones.forEach(zone=>{
+      const tier=zone.dataset.tier;
+      const ids=Array.from(zone.querySelectorAll('.icon')).map(icon=>icon.id);
+      state[tier]=ids;
+    });
+    localStorage.setItem('tierlist', JSON.stringify(state));
+  }
+
+  function loadState(){
+    const saved=localStorage.getItem('tierlist');
+    if(!saved) return;
+    const state=JSON.parse(saved);
+    Object.keys(state).forEach(tier=>{
+      const zone=document.querySelector(`.tier-dropzone[data-tier="${tier}"]`);
+      if(zone) state[tier].forEach(id=>{
+        const icon=document.getElementById(id);
+        if(icon) zone.appendChild(icon);
+      });
+    });
+  }
+
+  loadState();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  background-color: #121212;
+  color: #eee;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+h1 {
+  margin: 20px 0;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.container {
+  display: flex;
+  gap: 40px;
+  width: 90%;
+  max-width: 1400px;
+  justify-content: center;
+}
+
+/* ...이하 전부 style 부분 그대로 복붙 */
